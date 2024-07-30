@@ -7,6 +7,7 @@ import Category from '../screens/Category/Category';
 import Home from '../screens/Home/Home';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import styles from '../styles/styles';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +43,7 @@ const Tabs = () => {
           elevation: 0,
           backgroundColor: '#fff',
           borderRadius: 15,
-          height: 90,
+          height: 80,
           ...styles.shadow,
         },
       }}>
@@ -115,15 +116,22 @@ const Tabs = () => {
         options={{
           title: '',
           tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/logo/main-logo.png')}
-              resizeMode="contain"
-              style={{
-                width: 55,
-                height: 55,
-                tintColor: focused ? '#1F5DA0' : '#748c94',
-              }}
-            />
+            <View
+              style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
+              <Image
+                source={require('../assets/logo/main-logo.png')}
+                resizeMode="contain"
+              />
+              <Text
+                style={{
+                  color: focused ? '#1F5DA0 ' : '#ABABAB',
+                  marginTop: 15,
+                  fontSize: 11,
+                  fontWeight: '600',
+                }}>
+                BEST DEAL
+              </Text>
+            </View>
           ),
           tabBarButton: props => <CustomTabBarButton {...props} />,
         }}
@@ -194,16 +202,4 @@ const Tabs = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: '#7F5DF0',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5,
-  },
-});
 export default Tabs;

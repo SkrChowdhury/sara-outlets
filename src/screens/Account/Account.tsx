@@ -1,13 +1,14 @@
-import { Text, View } from 'react-native'
+import {Text, View} from 'react-native';
 
-import React from 'react'
+import React from 'react';
+import styles from '../../styles/styles';
 
 const Account = () => {
   return (
-    <View>
-      <Text>Account</Text>
+    <View style={styles.centerItem}>
+      <Text>This is Account Screen</Text>
     </View>
-  )
-}
+  );
+};
 
-export default Account
+export default Account;

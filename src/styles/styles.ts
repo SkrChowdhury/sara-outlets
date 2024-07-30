@@ -143,6 +143,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  noOutletFoundText: {
+    alignSelf: 'center',
+    marginTop: 40,
+  },
+  shadow: {
+    shadowColor: '#7F5DF0',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+  centerItem: {flex: 1, justifyContent: 'center', alignItems: 'center'},
 });
 
 export default styles;
