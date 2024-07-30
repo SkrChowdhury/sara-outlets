@@ -1,5 +1,6 @@
 import {
   Image,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,18 +8,39 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {fetchOutlets} from '../../api/outletsApi';
 
 const Home = () => {
   const [selectedOutlet, setSelectedOutlet] = useState(null);
-  const handleOutletClick = outlet => {
-    setSelectedOutlet(selectedOutlet === outlet ? null : outlet);
-    console.log(outlet);
+  const [outlets, setOutlets] = useState<Outlet[]>([]);
+  const handleOutletClick = id => {
+    setSelectedOutlet(selectedOutlet === id ? null : id);
+    console.log(id);
+  };
+
+  useEffect(() => {
+    const getOutlets = async () => {
+      const data = await fetchOutlets();
+      setOutlets(data);
+    };
+
+    getOutlets();
+  }, []);
+
+  const handleGetDirection = address => {
+    // Format the address for Google Maps
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      address,
+    )}`;
+    Linking.openURL(url).catch(err =>
+      console.error('Failed to open Google Maps:', err),
+    );
   };
 
   return (
@@ -50,67 +72,66 @@ const Home = () => {
           />
         </View>
       </View>
-      <ScrollView style={{}}>
-        {[
-          'Banasree Outlet',
-          'Baridhara J-Block Outlet',
-          'Barishal Outlet',
-          'Bashabo Outlet',
-          'Bashundhara City Outlet',
-          'Bogura Outlet',
-          'Feni Outlet',
-          'Mirpur Outlet',
-          'Mohammadpur Outlet',
-          'Rajshahi Outlet',
-          'Rangpur Outlet',
-          'Sylhet Outlet',
-          'Uttara Outlet',
-        ].map((outlet, index) => (
+      <ScrollView>
+        {outlets.map(outlet => (
           <>
             <TouchableOpacity
-              key={index}
+              key={outlet.outletId.toString()}
               style={styles.outletContainer}
-              onPress={() => handleOutletClick(outlet)}>
-              <Text style={styles.outletText}>{outlet}</Text>
+              onPress={() => handleOutletClick(outlet.outletId)}>
+              <Text style={styles.outletText}>{outlet.outletName}</Text>
               <EvilIcons name="chevron-down" size={30} color="#ABABAB" />
             </TouchableOpacity>
-            {selectedOutlet === outlet && (
+            {selectedOutlet === outlet.outletId && (
               <>
                 <TouchableOpacity
-                  key={index}
                   style={styles.outletContainerDetails}
                   onPress={() => handleOutletClick(outlet)}>
-                  <Text style={styles.outletTextDetails}>{outlet}</Text>
+                  <Text style={styles.outletTextDetails}>
+                    {outlet.outletName}
+                  </Text>
                   <EvilIcons name="chevron-up" size={30} color="#FFF" />
                 </TouchableOpacity>
                 <View style={styles.outletDetailsContainer}>
                   <Image
                     source={{
-                      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTueImEnNhEWQCiblhlIPk58O1ypBxo9GamQvhWr0nKLaxTNZg6E7n1ZsCYPSYJ5Ci9F5Q&usqp=CAU',
-                    }} // Replace with actual image URL
+                      uri: 'https://prod.saraemart.com' + outlet.outletImage,
+                    }}
                     style={styles.outletDetailsImage}
                   />
                   <View style={styles.outletDetailsInfoContainer}>
-                    <Text style={styles.outletDetailsTitle}>{outlet}</Text>
-                    <Text style={styles.outletDetailsText}>
-                      Address: Block-E, Road-01, Plot-48, Banasree, Dhaka-1219.
+                    <Text style={styles.outletDetailsTitle}>
+                      {outlet.outletName}
                     </Text>
-                    <Text style={styles.outletDetailsText}>
+                    <View>
+                      <Text style={styles.outletDetailsTextBold}>Address:</Text>
+                      <Text style={styles.outletDetailsText}>
+                        {outlet.address}
+                      </Text>
+                    </View>
+
+                    <Text style={styles.outletDetailsTextBold}>
                       Business Hours:
                     </Text>
                     <Text style={styles.outletDetailsText}>
-                      10:00 AM to 08:00 PM (Everyday)
+                      {outlet.businessHours} {`( ${outlet.businessHoursNote} )`}
                     </Text>
-                    <Text style={styles.outletDetailsText}>
+                    <Text style={styles.outletDetailsTextBold}>
                       Contact Number:
                     </Text>
-                    <Text style={styles.outletDetailsText}>
-                      +8801870728448, +8801870728449
-                    </Text>
+                    <View style={{flexDirection: 'row'}}>
+                      {outlet.contacts.map(contact => (
+                        <Text style={styles.outletDetailsText}>
+                          {outlet.contacts.length > 0
+                            ? `${contact.contact + ', '}`
+                            : `${contact.contact + ' '}`}
+                        </Text>
+                      ))}
+                    </View>
+
                     <TouchableOpacity
                       style={styles.outletDetailsButton}
-                      // onPress={handlePress}
-                    >
+                      onPress={handleGetDirection.bind(this, outlet.address)}>
                       <Text style={styles.outletDetailsButtonText}>
                         Get Direction
                       </Text>
@@ -169,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
     marginHorizontal: 10,
     marginVertical: 5,
     borderWidth: 1,
@@ -180,7 +201,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
     marginHorizontal: 10,
     marginVertical: 5,
     borderWidth: 1,
@@ -190,6 +211,7 @@ const styles = StyleSheet.create({
   },
   outletText: {
     fontSize: 16,
+    fontWeight: '600',
   },
   outletTextDetails: {
     fontSize: 16,
@@ -235,13 +257,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   outletDetailsTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
   },
   outletDetailsText: {
     fontSize: 16,
     marginBottom: 4,
+  },
+  outletDetailsTextBold: {
+    fontSize: 16,
+    marginBottom: 4,
+    fontWeight: 'bold',
   },
   outletDetailsButton: {
     marginTop: 16,
