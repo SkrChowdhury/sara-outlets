@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
 
+import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import Tabs from './src/navigators/Tab';
 
 const App = () => {
   useEffect(() => {
@@ -9,9 +10,9 @@ const App = () => {
     SplashScreen.hide();
   }, []);
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
   );
 };
 
