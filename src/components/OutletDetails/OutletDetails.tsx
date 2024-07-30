@@ -14,7 +14,6 @@ import styles from '../../styles/styles';
 const OutletDetails = ({outlet, setSelectedOutlet, selectedOutlet}) => {
   const handleOutletClick = (id: any) => {
     setSelectedOutlet(selectedOutlet === id ? null : id);
-    console.log(id);
   };
   const handleGetDirection = (address: string | number | boolean) => {
     // Format the address for Google Maps

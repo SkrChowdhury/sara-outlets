@@ -158,6 +158,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   centerItem: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  textCenter: {
+    textAlign: 'center',
+    marginTop: 40,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

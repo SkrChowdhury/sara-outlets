@@ -11,7 +11,8 @@ import {fetchOutlets} from '../../api/outletsApi';
 import OutletDetails from '../../components/OutletDetails/OutletDetails';
 import styles from '../../styles/styles';
 import Header from '../../components/Header/Header';
-
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const Home = () => {
   const [selectedOutlet, setSelectedOutlet] = useState(null);
   const [outlets, setOutlets] = useState<Outlet[]>([]);
@@ -21,7 +22,6 @@ const Home = () => {
 
   const handleOutletClick = id => {
     setSelectedOutlet(selectedOutlet === id ? null : id);
-    console.log(id);
   };
 
   const handleSearch = (query: string) => {
@@ -53,8 +53,12 @@ const Home = () => {
     getOutlets();
   }, []);
 
-  const renderItem = ({item}) => (
-    <>
+  const renderItem = ({item, index}) => (
+    <Animated.View
+      entering={FadeIn.duration(300).delay(index * 100)} // Delay each item
+      exiting={FadeOut.duration(300)}
+      // style={styles.itemContainer}
+    >
       <TouchableOpacity
         style={styles.outletContainer}
         onPress={() => handleOutletClick(item.outletId)}>
@@ -68,7 +72,7 @@ const Home = () => {
           selectedOutlet={selectedOutlet}
         />
       )}
-    </>
+    </Animated.View>
   );
 
   return (
@@ -78,13 +82,16 @@ const Home = () => {
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#1F5DA0" />
         </View>
+      ) : filteredOutlets.length === 0 ? (
+        <Text style={styles.textCenter}>No outlet found with this name</Text>
       ) : (
-        <FlatList
+        <AnimatedFlatList
           data={filteredOutlets}
           renderItem={renderItem}
           keyExtractor={item => item.outletId.toString()}
           initialNumToRender={5}
           maxToRenderPerBatch={5}
+          contentContainerStyle={{paddingBottom: 150}}
         />
       )}
     </View>
