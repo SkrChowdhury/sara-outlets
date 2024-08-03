@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   Text,
   TouchableOpacity,
   View,
@@ -76,7 +77,7 @@ const Home = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header searchQuery={searchQuery} onSearchChange={handleSearch} />
       {loading ? (
         <View style={styles.loaderContainer}>
@@ -94,7 +95,7 @@ const Home = () => {
           contentContainerStyle={{paddingBottom: 150}}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

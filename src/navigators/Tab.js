@@ -21,8 +21,8 @@ const CustomTabBarButton = ({children, onPress}) => (
     }}>
     <View
       style={{
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         borderRadius: 50,
         backgroundColor: '#fff',
       }}>
@@ -121,6 +121,8 @@ const Tabs = () => {
               <Image
                 source={require('../assets/logo/main-logo.png')}
                 resizeMode="contain"
+                height={70}
+                width={70}
               />
               <Text
                 style={{
